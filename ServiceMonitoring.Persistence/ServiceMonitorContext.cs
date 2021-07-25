@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ServiceMonitoring.Persistence.Mappings.ServiceMonitoringDomainModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace ServiceMonitoring.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ServiceMonitorModelMap();
         }
     }
 }
