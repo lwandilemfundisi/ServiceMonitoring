@@ -30,8 +30,10 @@ namespace ServiceMonitoring.Persistence.Mappings.ServiceMonitoringDomainModel
             .Property(o => o.Id)
             .HasConversion(new SingleValueObjectIdentityValueConverter<ServiceMonitorAggregateId>());
 
-            modelBuilder.Entity<ServiceMonitorAggregate>()
-                .HasMany<ServiceMethod>();
+            modelBuilder
+                .Entity<ServiceMethod>()
+                .HasOne<ServiceMonitorAggregate>()
+                .WithMany(c => c.ServiceMethods);
 
             return modelBuilder;
         }
