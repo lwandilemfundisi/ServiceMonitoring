@@ -25,6 +25,7 @@ namespace ServiceMonitoring.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Request = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Response = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExecutionTime = table.Column<DateTime>(type: "datetime2", nullable: true),

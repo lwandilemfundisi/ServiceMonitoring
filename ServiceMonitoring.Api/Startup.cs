@@ -34,6 +34,18 @@ namespace ServiceMonitoring.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: "enableCors",
+                    builder =>
+                    {
+                        builder
+                        .WithOrigins("https://localhost:44352")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
+            });
 
             services.AddControllers();
             services.AddLogging(l => l.AddConsole());
@@ -67,6 +79,8 @@ namespace ServiceMonitoring.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("enableCors");
 
             app.UseAuthorization();
 

@@ -10,7 +10,7 @@ using ServiceMonitoring.Persistence;
 namespace ServiceMonitoring.Persistence.Migrations
 {
     [DbContext(typeof(ServiceMonitorContext))]
-    [Migration("20210725182307_init")]
+    [Migration("20210725210459_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace ServiceMonitoring.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExecutionsStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Request")

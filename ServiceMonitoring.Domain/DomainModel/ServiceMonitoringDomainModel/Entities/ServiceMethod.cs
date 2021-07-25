@@ -12,6 +12,8 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Enti
     {
         #region Properties
 
+        public string Name { get; set; }
+
         public string Request { get; set; }
 
         public string Response { get; set; }

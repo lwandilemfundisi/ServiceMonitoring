@@ -33,6 +33,9 @@ namespace ServiceMonitoring.Persistence.Migrations
                     b.Property<string>("ExecutionsStatus")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Request")
                         .HasColumnType("nvarchar(max)");
 

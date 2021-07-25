@@ -30,7 +30,7 @@ namespace ServiceMonitoring.Api.Middlewares
         public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
         {
             var stopwatch = Stopwatch.StartNew();
-            string request = await FormatRequest(context.Request);
+            var request = await FormatRequest(context.Request);
             try
             {
                 var originalBodyStream = context.Response.Body;
@@ -42,11 +42,12 @@ namespace ServiceMonitoring.Api.Middlewares
                     var response = await FormatResponse(context.Response);
                     var bus = serviceProvider.GetService<ICommandBus>();
                     var result = await bus.PublishAsync(new AddServiceMethodEntryCommand(
-                        new ServiceMonitorAggregateId("servicemonitoraggregate-699da1fd-2350-411c-aec1-ec6f65ac8c93"),
+                        new ServiceMonitorAggregateId("servicemonitoraggregate-040fa886-249c-401e-9faa-d86bdc089ffa"),
                         new ServiceMethod
                         {
                             Id = ServiceMethodId.New,
-                            Request = request,
+                            Name = request.Key,
+                            Request = request.Value,
                             Response = response,
                             ExecutionTime = DateTime.Now,
                             TimeElapsed = stopwatch.Elapsed
@@ -58,11 +59,12 @@ namespace ServiceMonitoring.Api.Middlewares
             {
                 var bus = serviceProvider.GetService<ICommandBus>();
                 var result = await bus.PublishAsync(new AddServiceMethodEntryCommand(
-                    new ServiceMonitorAggregateId("servicemonitoraggregate-699da1fd-2350-411c-aec1-ec6f65ac8c93"),
+                    new ServiceMonitorAggregateId("servicemonitoraggregate-040fa886-249c-401e-9faa-d86bdc089ffa"),
                     new ServiceMethod
                     {
                         Id = ServiceMethodId.New,
-                        Request = request,
+                        Name = request.Key,
+                        Request = request.Value,
                         Response = e.ToString(),
                         ExecutionTime = DateTime.Now,
                         TimeElapsed = stopwatch.Elapsed,
@@ -73,12 +75,12 @@ namespace ServiceMonitoring.Api.Middlewares
             }
         }
 
-        private async Task<string> FormatRequest(HttpRequest request)
+        private async Task<KeyValuePair<string, string>> FormatRequest(HttpRequest request)
         {
             request.EnableBuffering();
             var body = await new StreamReader(request.Body).ReadToEndAsync();
             request.Body.Seek(0, SeekOrigin.Begin);
-            return $"{request.Scheme} {request.Host}{request.Path} {request.QueryString} {body}";
+            return new KeyValuePair<string, string>(request.Path, $"{request.Scheme} {request.Host}{request.Path} {request.QueryString} {body}");
         }
 
         private async Task<string> FormatResponse(HttpResponse response)
