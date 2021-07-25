@@ -1,3 +1,7 @@
+using Microservice.Framework.Domain;
+using Microservice.Framework.Domain.Extensions;
+using Microservice.Framework.Persistence;
+using Microservice.Framework.Persistence.EFCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ServiceMonitoring.Domain;
+using ServiceMonitoring.Persistence;
+using ServiceMonitoring.Persistence.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +35,18 @@ namespace ServiceMonitoring.Api
         {
 
             services.AddControllers();
+            services.AddLogging(l => l.AddConsole());
+
+            DomainContainer.New(services)
+                .ConfigureServiceMonitoringDomain()
+                .ConfigureEntityFramework(EntityFrameworkConfiguration.New)
+                .AddDbContextProvider<ServiceMonitorContext, ServiceMonitorContextProvider>()
+                .RegisterServices(sr =>
+                {
+                    sr.AddTransient<IPersistenceFactory, EntityFrameworkPersistenceFactory<ServiceMonitorContext>>();
+                    sr.AddSingleton(rctx => { return Configuration; });
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ServiceMonitoring.Api", Version = "v1" });
