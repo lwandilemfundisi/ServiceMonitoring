@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ServiceMonitoring.Api.Middlewares;
 using ServiceMonitoring.Domain;
 using ServiceMonitoring.Persistence;
 using ServiceMonitoring.Persistence.Extensions;
@@ -68,6 +69,8 @@ namespace ServiceMonitoring.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

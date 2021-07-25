@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entity
+namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
     public class ServiceMethodId : Identity<ServiceMethodId>

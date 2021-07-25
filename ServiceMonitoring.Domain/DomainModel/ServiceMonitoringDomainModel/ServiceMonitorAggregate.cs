@@ -1,5 +1,7 @@
 ﻿using Microservice.Framework.Domain.Aggregates;
-using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entity;
+using Microservice.Framework.Domain.Exceptions;
+using Microservice.Framework.Domain.Extensions;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +33,18 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel
         public string ServiceName { get; set; }
 
         public IList<ServiceMethod> ServiceMethods { get; set; }
+
+        public void CreateServiceMonitor(string serviceName)
+        {
+            Specs.AggregateIsNew.ThrowDomainErrorIfNotSatisfied(this);
+            ServiceName = serviceName;
+        }
+
+        public void AddServiceMethodEntry(ServiceMethod serviceMethod)
+        {
+            Specs.AggregateIsCreated.ThrowDomainErrorIfNotSatisfied(this);
+            ServiceMethods.Add(serviceMethod);
+        }
 
         #endregion
     }

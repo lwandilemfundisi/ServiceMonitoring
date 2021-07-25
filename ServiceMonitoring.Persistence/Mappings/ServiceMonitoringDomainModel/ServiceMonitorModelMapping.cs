@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel;
-using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entity;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
 using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ValueObjects;
 using ServiceMonitoring.Persistence.ValueObjectConverters;
 using System;
