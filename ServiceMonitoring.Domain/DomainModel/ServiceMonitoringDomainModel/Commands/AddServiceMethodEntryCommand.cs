@@ -26,14 +26,13 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Comm
     public class AddServiceMethodEntryCommandHandler
         : CommandHandler<ServiceMonitorAggregate, ServiceMonitorAggregateId, AddServiceMethodEntryCommand>
     {
-        public override async Task<IExecutionResult> ExecuteAsync(
+        public override Task<IExecutionResult> ExecuteAsync(
             ServiceMonitorAggregate aggregate,
             AddServiceMethodEntryCommand command, 
             CancellationToken cancellationToken)
         {
             aggregate.AddServiceMethodEntry(command.ServiceMethod);
-
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
     }
 }

@@ -19,13 +19,10 @@ namespace ServiceMonitoring.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entity.ServiceMethod", b =>
+            modelBuilder.Entity("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities.ServiceMethod", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ErrorDetails")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ExecutedBy")
                         .HasColumnType("nvarchar(max)");
@@ -36,7 +33,10 @@ namespace ServiceMonitoring.Persistence.Migrations
                     b.Property<string>("ExecutionsStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MethodName")
+                    b.Property<string>("Request")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Response")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceMonitorAggregateId")
@@ -68,7 +68,7 @@ namespace ServiceMonitoring.Persistence.Migrations
                     b.ToTable("ServiceMonitorAggregate");
                 });
 
-            modelBuilder.Entity("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entity.ServiceMethod", b =>
+            modelBuilder.Entity("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities.ServiceMethod", b =>
                 {
                     b.HasOne("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ServiceMonitorAggregate", null)
                         .WithMany("ServiceMethods")

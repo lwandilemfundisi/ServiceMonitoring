@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ValueObjects
 {
-    [ValueObjectResourcePath("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ValueObjects.Mappings.AddressType.xml")]
+    [ValueObjectResourcePath("ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ValueObjects.Mappings.ExecutionsStatusType.xml")]
     public class ExecutionsStatusType : XmlValueObject
     {
     }

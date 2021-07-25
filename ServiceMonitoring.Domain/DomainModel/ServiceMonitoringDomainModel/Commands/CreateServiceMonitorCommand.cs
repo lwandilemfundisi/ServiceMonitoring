@@ -27,14 +27,14 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Comm
     public class CreateServiceMonitorCommandHandler 
         : CommandHandler<ServiceMonitorAggregate, ServiceMonitorAggregateId, CreateServiceMonitorCommand>
     {
-        public override async Task<IExecutionResult> ExecuteAsync(
+        public override Task<IExecutionResult> ExecuteAsync(
             ServiceMonitorAggregate aggregate, 
             CreateServiceMonitorCommand command, 
             CancellationToken cancellationToken)
         {
             aggregate.CreateServiceMonitor(command.ServiceName);
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
     }
 }

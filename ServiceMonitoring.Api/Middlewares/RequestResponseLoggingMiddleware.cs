@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microservice.Framework.Persistence;
 using System.Net.Http;
+using System.Diagnostics;
+using Microservice.Framework.Domain.Commands;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Commands;
+using System.Threading;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ValueObjects;
 
 namespace ServiceMonitoring.Api.Middlewares
 {
@@ -20,17 +27,49 @@ namespace ServiceMonitoring.Api.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
         {
-            var request = await FormatRequest(context.Request);
-            var originalBodyStream = context.Response.Body;
-            using (var responseBody = new MemoryStream())
+            var stopwatch = Stopwatch.StartNew();
+            string request = await FormatRequest(context.Request);
+            try
             {
-                context.Response.Body = responseBody;
-                await _next(context);
-                var response = await FormatResponse(context.Response);
-                //TODO: Save log to chosen datastore
-                await responseBody.CopyToAsync(originalBodyStream);
+                var originalBodyStream = context.Response.Body;
+                using (var responseBody = new MemoryStream())
+                {
+                    context.Response.Body = responseBody;
+                    await _next(context);
+                    var elapsed = stopwatch.Elapsed;
+                    var response = await FormatResponse(context.Response);
+                    var bus = serviceProvider.GetService<ICommandBus>();
+                    var result = await bus.PublishAsync(new AddServiceMethodEntryCommand(
+                        new ServiceMonitorAggregateId("servicemonitoraggregate-699da1fd-2350-411c-aec1-ec6f65ac8c93"),
+                        new ServiceMethod
+                        {
+                            Id = ServiceMethodId.New,
+                            Request = request,
+                            Response = response,
+                            ExecutionTime = DateTime.Now,
+                            TimeElapsed = stopwatch.Elapsed
+                        }), CancellationToken.None);
+                    await responseBody.CopyToAsync(originalBodyStream);
+                }
+            }
+            catch (Exception e)
+            {
+                var bus = serviceProvider.GetService<ICommandBus>();
+                var result = await bus.PublishAsync(new AddServiceMethodEntryCommand(
+                    new ServiceMonitorAggregateId("servicemonitoraggregate-699da1fd-2350-411c-aec1-ec6f65ac8c93"),
+                    new ServiceMethod
+                    {
+                        Id = ServiceMethodId.New,
+                        Request = request,
+                        Response = e.ToString(),
+                        ExecutionTime = DateTime.Now,
+                        TimeElapsed = stopwatch.Elapsed,
+                        ExecutionsStatus = ExecutionsStatusTypes.Of().FailedExecution
+                    }), CancellationToken.None);
+
+                throw;
             }
         }
 

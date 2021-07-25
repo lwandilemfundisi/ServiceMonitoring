@@ -26,15 +26,7 @@ namespace ServiceMonitoring.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var createServiceMonitorResult = await _commandBus
-                    .PublishAsync(
-                        new CreateServiceMonitorCommand(ServiceMonitorAggregateId.New, model.ServiceName),
-                        CancellationToken.None);
-
-                if (createServiceMonitorResult.IsSuccess)
-                    return Ok(createServiceMonitorResult);
-                else
-                    return BadRequest(createServiceMonitorResult);
+                throw new System.Exception("intenrional exception");
             }
             else
             {

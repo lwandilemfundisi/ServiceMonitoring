@@ -1,7 +1,9 @@
-﻿using Microservice.Framework.Domain.Aggregates;
+﻿using Microservice.Framework.Common;
+using Microservice.Framework.Domain.Aggregates;
 using Microservice.Framework.Domain.Exceptions;
 using Microservice.Framework.Domain.Extensions;
 using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,12 +40,20 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel
         {
             Specs.AggregateIsNew.ThrowDomainErrorIfNotSatisfied(this);
             ServiceName = serviceName;
+            Emit(new CreatedServiceMonitorEvent(serviceName));
         }
 
         public void AddServiceMethodEntry(ServiceMethod serviceMethod)
         {
             Specs.AggregateIsCreated.ThrowDomainErrorIfNotSatisfied(this);
+
+            if(ServiceMethods.IsNull())
+            {
+                ServiceMethods = new List<ServiceMethod>();
+            }
+
             ServiceMethods.Add(serviceMethod);
+            Emit(new AddedServiceMethodEntryEvent(serviceMethod));
         }
 
         #endregion

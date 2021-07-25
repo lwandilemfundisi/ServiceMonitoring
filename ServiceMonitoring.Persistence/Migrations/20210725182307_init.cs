@@ -25,11 +25,11 @@ namespace ServiceMonitoring.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MethodName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Request = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Response = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExecutionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TimeElapsed = table.Column<TimeSpan>(type: "time", nullable: false),
                     ExecutionsStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ErrorDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExecutedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ServiceMonitorAggregateId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
