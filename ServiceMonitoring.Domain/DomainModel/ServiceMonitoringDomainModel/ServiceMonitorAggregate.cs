@@ -1,4 +1,5 @@
 ﻿using Microservice.Framework.Domain.Aggregates;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,14 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel
         {
 
         }
+
+        #endregion
+
+        #region Properties
+
+        public string ServiceName { get; set; }
+
+        public IList<ServiceMethod> ServiceMethods { get; set; }
 
         #endregion
     }

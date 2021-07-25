@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ValueObjects>
+	<ValueObject>
+		<Code>Ex_Suc</Code>
+		<Text>Successfully Executed</Text>
+	</ValueObject>
+	<ValueObject>
+		<Code>Ex_Fal</Code>
+		<Text>Failed Execution</Text>
+	</ValueObject>
+	<ValueObject>
+		<Code>Ex_Non</Code>
+		<Text>No Execution</Text>
+	</ValueObject>
+</ValueObjects>
