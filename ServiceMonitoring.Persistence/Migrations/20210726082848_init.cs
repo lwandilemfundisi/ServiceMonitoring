@@ -28,7 +28,7 @@ namespace ServiceMonitoring.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Request = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Response = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExecutionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExecutionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TimeElapsed = table.Column<TimeSpan>(type: "time", nullable: false),
                     ExecutionsStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExecutedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),

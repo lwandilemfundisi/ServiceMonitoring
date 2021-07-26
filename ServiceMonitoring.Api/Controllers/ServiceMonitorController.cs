@@ -8,6 +8,7 @@ using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Queries;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
 
 namespace ServiceMonitoring.Api.Controllers
 {
@@ -49,7 +50,7 @@ namespace ServiceMonitoring.Api.Controllers
         }
 
         [HttpPost("queryservice")]
-        public async Task<IActionResult> AddService(GetServiceMonitorRequestModel model)
+        public async Task<IActionResult> QueryService(GetServiceMonitorRequestModel model)
         {
             if (ModelState.IsValid)
             {
@@ -57,6 +58,34 @@ namespace ServiceMonitoring.Api.Controllers
                     .ProcessAsync(new QueryServiceMonitor(
                         new ServiceMonitorAggregateId(model.Id)),
                         CancellationToken.None));
+            }
+            else
+            {
+                return BadRequest(ModelState.Values);
+            }
+        }
+
+        [HttpPost("addservicemethodlog")]
+        public async Task<IActionResult> AddServiceMethodLog(AddServiceMethodLogRequestModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var addServiceMethodLogResult = await _commandBus.PublishAsync(new AddServiceMethodEntryCommand(
+                        new ServiceMonitorAggregateId(model.ServiceId),
+                        new ServiceMethod
+                        {
+                            Id = ServiceMethodId.New,
+                            Name = model.MethodName,
+                            Request = model.RequestUri,
+                            Response = model.Response,
+                            ExecutionTime = model.MethodExecutionTime,
+                            TimeElapsed = model.ElapsedTime
+                        }), CancellationToken.None);
+
+                if (addServiceMethodLogResult.IsSuccess)
+                    return Ok(addServiceMethodLogResult);
+                else
+                    return BadRequest(addServiceMethodLogResult);
             }
             else
             {

@@ -27,7 +27,7 @@ namespace ServiceMonitoring.Persistence.Migrations
                     b.Property<string>("ExecutedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ExecutionTime")
+                    b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExecutionsStatus")
