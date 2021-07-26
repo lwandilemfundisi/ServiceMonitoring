@@ -18,7 +18,7 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Enti
 
         public string Response { get; set; }
 
-        public DateTime? ExecutionTime { get; set; }
+        public DateTime ExecutionTime { get; set; }
 
         public TimeSpan TimeElapsed { get; set; }
 

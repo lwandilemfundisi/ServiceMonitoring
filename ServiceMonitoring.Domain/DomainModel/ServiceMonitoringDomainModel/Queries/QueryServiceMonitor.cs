@@ -2,6 +2,7 @@
 using Microservice.Framework.Persistence;
 using Microservice.Framework.Persistence.EFCore.Queries.CriteriaQueries;
 using Microservice.Framework.Persistence.EFCore.Queries.Filtering;
+using Microservice.Framework.Persistence.Queries.Filtering;
 using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
 using System;
 using System.Collections.Generic;
@@ -35,8 +36,8 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Quer
         public async Task<IEnumerable<SeriesModel>> ExecuteQueryAsync(QueryServiceMonitor query, CancellationToken cancellationToken)
         {
             var service = await Find(query);
-            var byName = service.ServiceMethods.GroupBy(m => m.Name);
-            return byName.Select(g => new SeriesModel { Name = g.Key, Data = g.ToList().Select(m => m.TimeElapsed.TotalSeconds) });
+            var byName = service.ServiceMethods.OrderByDescending(sm => sm.ExecutionTime).GroupBy(m => m.Name);
+            return byName.Select(g => new SeriesModel { Name = g.Key, Data = g.ToList().Select(m => new KeyValuePair<DateTime, double>(m.ExecutionTime, m.TimeElapsed.TotalSeconds)) });
         }
     }
 
@@ -44,6 +45,6 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Quer
     {
         public string Name { get; set; }
 
-        public IEnumerable<double> Data { get; set; }
+        public IEnumerable<KeyValuePair<DateTime, double>> Data { get; set; }
     }
 }
