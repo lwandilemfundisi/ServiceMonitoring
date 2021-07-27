@@ -1,7 +1,7 @@
 ﻿function getGraphSeries() {
 
     var postData = JSON.stringify({
-        "Id": "servicemonitoraggregate-040fa886-249c-401e-9faa-d86bdc089ffa"
+        "Id": "servicemonitoraggregate-3637f267-c79d-4659-9fb6-d648378b7549"
     });
 
     PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
@@ -9,18 +9,41 @@
                 chart: {
                     events: {
                         load: function () {
+                            var series = this.series[0];
+                            setInterval(function () {
+                                PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
+                                    var graph = series.graph,
+                                        area = series.area,
+                                        currentShift = (graph && graph.shift) || 0;
+                                    Highcharts.each([graph, area, series.graphNeg, series.areaNeg], function (shape) {
+                                        if (shape) {
+                                            shape.shift = currentShift + 1;
+                                        }
+                                    });
 
-                            //// set up the updating of the chart each second
-                            //var series = this.series[0];
-                            //setInterval(function () {
-                            //    var x = (new Date()).getTime(), // current time
-                            //        y = Math.round(Math.random() * 100);
-                            //    series.addPoint([x, y], true, true);
-                            //}, 1000);
+                                    var newSeries = parseData(data);
+                                    for (idxi = 0; idxi < newSeries.length; idxi++) {
+                                        series.data[idxi].remove(false, false);
+                                        series.addPoint(newSeries[0].data[idxi], true, true);
+                                    }
+                                });
+                            }, 1000);
                         }
                     }
                 },
-
+                plotOptions: {
+                    series: {
+                        turboThreshold: 1000,
+                        cursor: 'pointer',
+                        point: {
+                            events: {
+                                click: function () {
+                                    alert('Category: ' + this.category + ', value: ' + this.y);
+                                }
+                            }
+                        }
+                    }
+                },
                 rangeSelector: {
                     allButtonsEnabled: true,
                     buttons: [{
@@ -33,15 +56,12 @@
                         text: '10s'
                     }]
                 },
-
                 title: {
                     text: 'Live Api Performance Monitor'
                 },
-
                 exporting: {
                     enabled: false
                 },
-
                 series: parseData(data)
             });
     });

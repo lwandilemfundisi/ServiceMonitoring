@@ -36,7 +36,7 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Quer
         public async Task<IEnumerable<SeriesModel>> ExecuteQueryAsync(QueryServiceMonitor query, CancellationToken cancellationToken)
         {
             var service = await Find(query);
-            var byName = service.ServiceMethods.OrderByDescending(sm => sm.ExecutionTime).GroupBy(m => m.Name);
+            var byName = service.ServiceMethods.OrderByDescending(sm => sm.ExecutionTime).Take(100).GroupBy(m => m.Name);
             return byName.Select(g => new SeriesModel { Name = g.Key, Data = g.ToList().Select(m => new KeyValuePair<DateTime, double>(m.ExecutionTime, m.TimeElapsed.TotalSeconds)) });
         }
     }

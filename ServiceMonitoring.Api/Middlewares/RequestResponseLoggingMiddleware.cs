@@ -42,7 +42,7 @@ namespace ServiceMonitoring.Api.Middlewares
                     var response = await FormatResponse(context.Response);
                     var bus = serviceProvider.GetService<ICommandBus>();
                     var result = await bus.PublishAsync(new AddServiceMethodEntryCommand(
-                        new ServiceMonitorAggregateId("servicemonitoraggregate-040fa886-249c-401e-9faa-d86bdc089ffa"),
+                        new ServiceMonitorAggregateId("servicemonitoraggregate-3637f267-c79d-4659-9fb6-d648378b7549"),
                         new ServiceMethod
                         {
                             Id = ServiceMethodId.New,
@@ -59,7 +59,7 @@ namespace ServiceMonitoring.Api.Middlewares
             {
                 var bus = serviceProvider.GetService<ICommandBus>();
                 var result = await bus.PublishAsync(new AddServiceMethodEntryCommand(
-                    new ServiceMonitorAggregateId("servicemonitoraggregate-040fa886-249c-401e-9faa-d86bdc089ffa"),
+                    new ServiceMonitorAggregateId("servicemonitoraggregate-3637f267-c79d-4659-9fb6-d648378b7549"),
                     new ServiceMethod
                     {
                         Id = ServiceMethodId.New,
