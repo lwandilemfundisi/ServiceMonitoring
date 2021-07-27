@@ -9,25 +9,25 @@
                 chart: {
                     events: {
                         load: function () {
-                            var series = this.series[0];
-                            setInterval(function () {
-                                PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
-                                    var graph = series.graph,
-                                        area = series.area,
-                                        currentShift = (graph && graph.shift) || 0;
-                                    Highcharts.each([graph, area, series.graphNeg, series.areaNeg], function (shape) {
-                                        if (shape) {
-                                            shape.shift = currentShift + 1;
-                                        }
-                                    });
+                            //var series = this.series[0];
+                            //setInterval(function () {
+                            //    PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
+                            //        var graph = series.graph,
+                            //            area = series.area,
+                            //            currentShift = (graph && graph.shift) || 0;
+                            //        Highcharts.each([graph, area, series.graphNeg, series.areaNeg], function (shape) {
+                            //            if (shape) {
+                            //                shape.shift = currentShift + 1;
+                            //            }
+                            //        });
 
-                                    var newSeries = parseData(data);
-                                    for (idxi = 0; idxi < newSeries.length; idxi++) {
-                                        series.data[idxi].remove(false, false);
-                                        series.addPoint(newSeries[0].data[idxi], true, true);
-                                    }
-                                });
-                            }, 1000);
+                            //        var newSeries = parseData(data);
+                            //        for (idxi = 0; idxi < newSeries.length; idxi++) {
+                            //            series.data[idxi].remove(false, false);
+                            //            series.addPoint(newSeries[0].data[idxi], true, true);
+                            //        }
+                            //    });
+                            //}, 1000);
                         }
                     }
                 },
