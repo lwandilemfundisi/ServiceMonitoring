@@ -48,9 +48,10 @@ namespace ServiceMonitoring.Api.Middlewares
                             Id = ServiceMethodId.New,
                             Name = request.Key,
                             Request = request.Value,
-                            Response = response,
+                            Response = response.Key,
                             ExecutionTime = DateTime.Now,
-                            TimeElapsed = stopwatch.Elapsed
+                            TimeElapsed = stopwatch.Elapsed,
+                            ExecutionsStatus = response.Value
                         }), CancellationToken.None);
                     await responseBody.CopyToAsync(originalBodyStream);
                 }
@@ -80,15 +81,19 @@ namespace ServiceMonitoring.Api.Middlewares
             request.EnableBuffering();
             var body = await new StreamReader(request.Body).ReadToEndAsync();
             request.Body.Seek(0, SeekOrigin.Begin);
-            return new KeyValuePair<string, string>(request.Path, $"{request.Scheme} {request.Host}{request.Path} {request.QueryString} {body}");
+            return new KeyValuePair<string, string>(request.Path, $"{request.Scheme}://{request.Host}{request.Path} {request.QueryString} {body}");
         }
 
-        private async Task<string> FormatResponse(HttpResponse response)
+        private async Task<KeyValuePair<string, ExecutionsStatusType>> FormatResponse(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
             string text = await new StreamReader(response.Body).ReadToEndAsync();
             response.Body.Seek(0, SeekOrigin.Begin);
-            return $"{response.StatusCode}: {text}";
+            return new KeyValuePair<string, ExecutionsStatusType>(
+                $"{response.StatusCode}: {text}",
+                (response.StatusCode >= 400) && (response.StatusCode <= 599) 
+                ? ExecutionsStatusTypes.Of().FailedExecution : 
+                  ExecutionsStatusTypes.Of().ExecutedSuccessfully);
         }
     }
 }
