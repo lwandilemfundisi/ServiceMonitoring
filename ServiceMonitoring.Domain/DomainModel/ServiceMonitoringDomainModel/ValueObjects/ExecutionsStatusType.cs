@@ -17,7 +17,5 @@ namespace ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Valu
         public ExecutionsStatusType ExecutedSuccessfully { get { return FindValueObject("Ex_Suc"); } }
 
         public ExecutionsStatusType FailedExecution { get { return FindValueObject("Ex_Fal"); } }
-
-        public ExecutionsStatusType NoExecution { get { return FindValueObject("Ex_Non"); } }
     }
 }

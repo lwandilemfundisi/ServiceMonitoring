@@ -4,21 +4,14 @@ using Microservice.Framework.Persistence;
 using Microservice.Framework.Persistence.EFCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ServiceMonitoring.Api.Middlewares;
 using ServiceMonitoring.Domain;
 using ServiceMonitoring.Persistence;
 using ServiceMonitoring.Persistence.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ServiceMonitoring.Api
 {
@@ -47,7 +40,7 @@ namespace ServiceMonitoring.Api
                     });
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddLogging(l => l.AddConsole());
 
             DomainContainer.New(services)
@@ -83,8 +76,6 @@ namespace ServiceMonitoring.Api
             app.UseCors("enableCors");
 
             app.UseAuthorization();
-
-            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

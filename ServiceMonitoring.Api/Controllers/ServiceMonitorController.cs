@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.Entities;
+using ServiceMonitoring.Domain.DomainModel.ServiceMonitoringDomainModel.ValueObjects;
+using Microservice.Framework.Common;
 
 namespace ServiceMonitoring.Api.Controllers
 {
@@ -79,7 +81,9 @@ namespace ServiceMonitoring.Api.Controllers
                             Request = model.RequestUri,
                             Response = model.Response,
                             ExecutionTime = model.MethodExecutionTime,
-                            TimeElapsed = model.ElapsedTime
+                            TimeElapsed = model.ElapsedTime,
+                            ExecutionsStatus = XmlValueObjectLookup.Repository.Find<ExecutionsStatusType>(model.ExecutionsStatus),
+                            ExecutedBy = model.ExecutedBy
                         }), CancellationToken.None);
 
                 if (addServiceMethodLogResult.IsSuccess)

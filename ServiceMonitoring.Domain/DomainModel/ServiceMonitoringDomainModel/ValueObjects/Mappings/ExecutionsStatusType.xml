@@ -8,8 +8,4 @@
 		<Code>Ex_Fal</Code>
 		<Text>Failed Execution</Text>
 	</ValueObject>
-	<ValueObject>
-		<Code>Ex_Non</Code>
-		<Text>No Execution</Text>
-	</ValueObject>
 </ValueObjects>
