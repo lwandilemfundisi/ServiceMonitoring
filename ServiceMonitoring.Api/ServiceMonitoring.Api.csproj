@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.7" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ServiceMonitoring.Domain\ServiceMonitoring.Domain.csproj" />
     <ProjectReference Include="..\ServiceMonitoring.Persistence\ServiceMonitoring.Persistence.csproj" />
   </ItemGroup>
 

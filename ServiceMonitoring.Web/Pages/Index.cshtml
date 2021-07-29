@@ -14,6 +14,13 @@
     <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
     <script src="~/js/graphData.js" asp-append-version="true"></script>
     <script type="text/javascript">
-        getGraphSeries();
+
+        $(document).ready(function () {
+            getGraphSeries();
+
+            setUpSignalR();
+        });
+
+        
     </script>
 }

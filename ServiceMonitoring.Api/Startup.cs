@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ServiceMonitoring.Domain;
+using ServiceMonitoring.Domain.Hubs;
 using ServiceMonitoring.Persistence;
 using ServiceMonitoring.Persistence.Extensions;
 
@@ -27,6 +28,7 @@ namespace ServiceMonitoring.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
             services.AddCors(options =>
             {
                 options.AddPolicy(
@@ -36,7 +38,8 @@ namespace ServiceMonitoring.Api
                         builder
                         .WithOrigins("https://localhost:44352")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                     });
             });
 
@@ -80,6 +83,7 @@ namespace ServiceMonitoring.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SendMethodLogsHub>("/sendmethodlog");
             });
         }
     }

@@ -5,29 +5,29 @@
     });
 
     PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
-            Highcharts.stockChart('container', {
+            chart = Highcharts.stockChart('container', {
                 chart: {
                     events: {
                         load: function () {
-                            var series = this.series[0];
-                            setInterval(function () {
-                                PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
-                                    var graph = series.graph,
-                                        area = series.area,
-                                        currentShift = (graph && graph.shift) || 0;
-                                    Highcharts.each([graph, area, series.graphNeg, series.areaNeg], function (shape) {
-                                        if (shape) {
-                                            shape.shift = currentShift + 1;
-                                        }
-                                    });
+                            //var series = this.series[0];
+                            //setInterval(function () {
+                            //    PostJson("https://localhost:5001/ServiceMonitor/queryservice", postData, function (data) {
+                            //        var graph = series.graph,
+                            //            area = series.area,
+                            //            currentShift = (graph && graph.shift) || 0;
+                            //        Highcharts.each([graph, area, series.graphNeg, series.areaNeg], function (shape) {
+                            //            if (shape) {
+                            //                shape.shift = currentShift + 1;
+                            //            }
+                            //        });
 
-                                    var newSeries = parseData(data);
-                                    for (idxi = 0; idxi < newSeries.length; idxi++) {
-                                        series.data[idxi].remove(false, false);
-                                        series.addPoint(newSeries[0].data[idxi], true, true);
-                                    }
-                                });
-                            }, 1000);
+                            //        var newSeries = parseData(data);
+                            //        for (idxi = 0; idxi < newSeries.length; idxi++) {
+                            //            series.data[idxi].remove(false, false);
+                            //            series.addPoint(newSeries[0].data[idxi], true, true);
+                            //        }
+                            //    });
+                            //}, 1000);
                         }
                     }
                 },
@@ -105,4 +105,39 @@ function createData(d) {
         data.push([new Date(d[ii].key).getTime(), d[ii].value]);
     };
     return data;
+}
+
+function setUpSignalR() {
+    var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:5001/sendmethodlog").build();
+
+    connection.on("SendMethodLog", function (data) {
+        var obj = JSON.parse(data);
+        var series = chart.series[0];
+        //var graph = series.graph,
+        //    area = series.area,
+        //    currentShift = (graph && graph.shift) || 0;
+        //Highcharts.each([graph, area, series.graphNeg, series.areaNeg], function (shape) {
+        //    if (shape) {
+        //        shape.shift = currentShift + 1;
+        //    }
+        //});
+        //series.data[0].remove(false, false);
+        series.addPoint([new Date(obj.ExecutionTime).getTime(), obj.TimeElapsed], true, true);
+    });
+
+    async function start() {
+        try {
+            await connection.start();
+            console.log("SignalR Connected.");
+        } catch (err) {
+            console.log(err);
+            setTimeout(start, 5000);
+        }
+    };
+
+    connection.onclose(async () => {
+        await start();
+    });
+
+    start();
 }
